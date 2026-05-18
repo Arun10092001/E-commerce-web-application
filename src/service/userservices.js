@@ -9,12 +9,13 @@ export async function signup(user, profile) {
   body.append("deliveryAddress", user.deliveryAddress)
   body.append("profilePic", profile)
 
-  const { data } = await apiClient.post("/user/signup", body)
+  const { data } = await apiClient.post("/users/signup", body)
   localStorage.setItem("token", data.token)
+  return data
 }
 
 export async function login(user) {
-  const { data } = await apiClient.post("/user/login", user)
+  const { data } = await apiClient.post("/users/login", user)
   localStorage.setItem("token", data.token)
   return data
 }

@@ -22,10 +22,10 @@ const ProductList = () => {
         ...(searchQuery && { search: searchQuery }),
         ...(category && { category }),
         page,
-        perPage: 10,
+        perPage: 8,
       },
     },
-    [category, page, searchQuery]
+    [category, page, searchQuery],
   );
 
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -52,9 +52,13 @@ const ProductList = () => {
       } else if (sortBy === "price asc") {
         setSortedProducts(products.sort((a, b) => a.price - b.price));
       } else if (sortBy === "rate desc") {
-        setSortedProducts(products.sort((a, b) => b.reviews.rate - a.reviews.rate));
+        setSortedProducts(
+          products.sort((a, b) => b.reviews.rate - a.reviews.rate),
+        );
       } else if (sortBy === "rate asc") {
-        setSortedProducts(products.sort((a, b) => a.reviews.rate - b.reviews.rate));
+        setSortedProducts(
+          products.sort((a, b) => a.reviews.rate - b.reviews.rate),
+        );
       } else {
         setSortedProducts(products);
       }
@@ -94,7 +98,7 @@ const ProductList = () => {
       {data && (
         <Pagination
           totalPosts={data?.totalProducts ?? 0}
-          postsPerPage={10}
+          postsPerPage={8}
           onClick={handlePageChange}
           currentPage={page}
         />

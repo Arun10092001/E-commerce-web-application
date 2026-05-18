@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Routing from "./components/Routing/Routing";
 import { getJwt, getUser } from "./service/userservices";
 import setAuthToken from "./utils/setAuthToken";
-import { decreaseProductAPI, getCartAPI, increaseProductAPI } from "./service/cartServices";
+import { addToCartApi, decreaseProductAPI, getCartAPI, increaseProductAPI, removeFromCartAPI } from "./service/cartServices";
 import 'react-toastify/dist/ReactToastify.css'
 import CartContext from "./context/CartContext";
 
@@ -29,33 +29,35 @@ const App = () => {
     }
   }, []);
 
-  const addtoCart = (product, quantity) => {
-  if (!product || !product._id) {
-    console.error("Invalid product passed to addtoCart:", product);
-    return;
-  }
+  const addtoCart = (product, quantity = 1) => {
+    if (!product || !product._id) {
+      console.error("Invalid product passed to addtoCart:", product);
+      return;
+    }
 
-  const updatedCart = [...cart];
-  const productIndex = updatedCart.findIndex(
-    (item) => item.product._id === product._id
-  );
+    const oldCart = [...cart];
+    const updatedCart = [...cart];
+    const productIndex = updatedCart.findIndex(
+      (item) => item.product._id === product._id
+    );
 
-  if (productIndex === -1) {
-    updatedCart.push({ product, quantity });
-  } else {
-    updatedCart[productIndex].quantity += quantity;
-  }
+    if (productIndex === -1) {
+      updatedCart.push({ product, quantity });
+    } else {
+      updatedCart[productIndex].quantity += quantity;
+    }
 
-  setCart(updatedCart); 
+    setCart(updatedCart);
 
-  addToCartApi(product._id, quantity).then((res) =>{
-    toast.success("Product Added Successfully!")
-  })
-  .catch((err) => {
-    toast.error("Failed to add product!")
-    setCart(cart)
-  })
-};
+    addToCartApi(product._id, quantity)
+      .then(() => {
+        toast.success("Product Added Successfully!");
+      })
+      .catch(() => {
+        toast.error("Failed to add product!");
+        setCart(oldCart);
+      });
+  };
 
   const removeFromCart = id => {
     const oldCart = [...cart]
@@ -86,10 +88,11 @@ const App = () => {
       updatedCart[productIndex].quantity -= 1
       setCart(updatedCart)
 
-       decreaseProductAPI(id).catch(err => {
+      decreaseProductAPI(id).catch(err => {
         toast.error("Something went wrong!")
         setCart(oldCart)
       })
+    }
   }
 
   const getCart = () => {
@@ -103,7 +106,7 @@ const App = () => {
       getCart()
     }
   }, [user])
-}
+
   return (
     <UserContext.Provider value={user}>
       <CartContext.Provider value = {{cart, addtoCart, removeFromCart, updateCart, setCart}}>

@@ -1,53 +1,54 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from "react";
 
-import config from '../../config.json'
-import UserContext from '../../context/UserContext.js'
-import './CartPage.css'
-import remove from '../../assets/remove.png'
-import Table from '../Common/Table.jsx'
-import QuantityInput from '../SingleProduct/QuantityInput.jsx'
-import CartContext from '../../context/CartContext.js'
-import { checkoutAPI } from '../../service/orderServices.js'
-import { toast } from 'react-toastify'
+import config from "../../config.json";
+import UserContext from "../../context/UserContext.js";
+import "./CartPage.css";
+import remove from "../../assets/remove.png";
+import Table from "../Common/Table.jsx";
+import QuantityInput from "../SingleProduct/QuantityInput.jsx";
+import CartContext from "../../context/CartContext.js";
+import { checkoutAPI } from "../../service/orderServices.js";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
-  const [subTotal, setSubTotal] = useState(0)
-  const user = useContext(UserContext)
-  const { cart, removeFromCart, updateCart, setCart } = useContext(CartContext)
+  const [subTotal, setSubTotal] = useState(0);
+  const user = useContext(UserContext);
+  const { cart, removeFromCart, updateCart, setCart } = useContext(CartContext);
 
   useEffect(() => {
-    let total = 0
-    cart.forEach(item => {
-      total += item.product.price * item.quantity
-    })
-    setSubTotal(total)
-  }, [cart])
+    let total = 0;
+    cart.forEach((item) => {
+      total += item.product.price * item.quantity;
+    });
+    setSubTotal(total);
+  }, [cart]);
 
   const checkout = () => {
-    const oldCart = [...cart]
-    setCart([])
-    localStorage.removeItem("cart")
-    
-    checkoutAPI().then(() => {
-      toast.success("Order placed successfully")
-    })
-    .catch(() => {
-      toast.error("Something went wrong!")
-      setCart(oldCart)
-      localStorage.setItem("cart", JSON.stringify(oldCart))
-    })
-  }
+    const oldCart = [...cart];
+    setCart([]);
+    localStorage.removeItem("cart");
+
+    checkoutAPI()
+      .then(() => {
+        toast.success("Order placed successfully");
+      })
+      .catch(() => {
+        toast.error("Something went wrong!");
+        setCart(oldCart);
+        localStorage.setItem("cart", JSON.stringify(oldCart));
+      });
+  };
 
   return (
-    <section className='align_center cart_page'>
+    <section className="align_center cart_page">
       <div className="align_center user_info">
         <img
           src={`${config.backendURL}/profile/${user?.profilePic}`}
-          alt='user profile'
+          alt="user profile"
         />
         <div>
-          <p className='user_name'>Name: {user?.name}</p>
-          <p className='user_email'>Email: {user?.email}</p>
+          <p className="user_name">Name: {user?.name}</p>
+          <p className="user_email">Email: {user?.email}</p>
         </div>
       </div>
 
@@ -57,7 +58,7 @@ const CartPage = () => {
             <tr key={product._id}>
               <td>{product.title}</td>
               <td>${product.price}</td>
-              <td className='align_center table_quantity_input'>
+              <td className="align_center table_quantity_input">
                 <QuantityInput
                   quantity={quantity}
                   stock={product.stock}
@@ -70,8 +71,8 @@ const CartPage = () => {
               <td>
                 <img
                   src={remove}
-                  alt='remove icon'
-                  className='cart_remove_icon'
+                  alt="remove icon"
+                  className="cart_remove_icon"
                   onClick={() => removeFromCart(product._id)}
                 />
               </td>
@@ -80,7 +81,7 @@ const CartPage = () => {
         </tbody>
       </Table>
 
-      <table className='cart_bill'>
+      <table className="cart_bill">
         <tbody>
           <tr>
             <td>Subtotal</td>
@@ -90,19 +91,18 @@ const CartPage = () => {
             <td>Shipping</td>
             <td>$5</td>
           </tr>
-          <tr className='cart_bill_final'>
+          <tr className="cart_bill_final">
             <td>Total</td>
             <td>${subTotal + 5}</td>
           </tr>
         </tbody>
       </table>
 
-      <button 
-      className="search_button checkout_button"
-      onClick={checkout}
-      >Checkout</button>
+      <button className="search_button checkout_button" onClick={checkout}>
+        Checkout
+      </button>
     </section>
-  )
-}
+  );
+};
 
-export default CartPage
+export default CartPage;

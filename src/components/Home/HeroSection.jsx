@@ -1,25 +1,23 @@
-import React from 'react'
+import React from "react";
 
-import './HeroSection.css'
-import iphone from '../../assets/iPhone.webp'
-import mac from '../../assets/mac.jpg'
+import "./HeroSection.css";
 
-function HeroSection({title, subtitle, link, image}) {
+function HeroSection({ title, subtitle, link, image }) {
   return (
-    <section className='hero_section'>
+    <section className="hero_section">
       <div className="align_center">
-        <h2 className='hero_title'>{title}</h2>
-        <p className='hero_subtitle'>
-          {subtitle}
-        </p>
-        <a href={link} className='hero_link'>Buy Now</a>
+        <h2 className="hero_title">{title}</h2>
+        <p className="hero_subtitle">{subtitle}</p>
+        <a href={link} className="hero_link">
+          Buy Now
+        </a>
       </div>
 
       <div className="align_center">
-        <img src={image} alt='' className='hero_image'/>
+        <img src={image} alt="" className="hero_image" />
       </div>
     </section>
-  )
+  );
 }
 
-export default HeroSection
+export default HeroSection;

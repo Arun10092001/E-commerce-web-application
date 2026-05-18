@@ -57,7 +57,7 @@ const SingleProductPage = () => {
             />    
             </div>
 
-            <button className="search_button add_cart" onClick={() => addtoCart(product, 1)}>
+            <button className="search_button add_cart" onClick={() => addtoCart(product, quantity)}>
                 Add to Cart</button></>}
         </div>
         </>)}
